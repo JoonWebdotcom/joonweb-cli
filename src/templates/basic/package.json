@@ -1,0 +1,12 @@
+{
+  "name": "{{name}}",
+  "version": "1.0.0",
+  "description": "JoonWeb App",
+  "main": "app.js",
+  "scripts": {
+    "serve": "joonweb serve",
+    "tunnel": "joonweb tunnel",
+    "deploy": "joonweb deploy"
+  },
+  "dependencies": {}
+}

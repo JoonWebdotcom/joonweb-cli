@@ -1,0 +1,92 @@
+Embed Extension Map::
+==========================================
+
+CLI Role:
+---------------
+    # Creation:
+        - Creation of Sample Extension Inside App [Proper Structure] - Done. [extension.js]
+        - Need to import from github [sample extension according to type, i.e app-embed theme extension sample] - Pending
+
+    # Serving/Runtimo:
+        - Started App Server - Working Fine....
+
+        - Check for Extension folder if exists inside app and how many to loop. - Done.
+        - Search for joonweb.extension.json [for Configuration of Embed Blocks and Type, files.] - Done.
+        - Validate files and configuration offline.. - Done.
+        - Get All Embeded blocks and assets mainfest, if all goes fine go to Step2. - Done.
+
+        -> Interacting with Joonweb Server with Configuration and ZIP.
+            - Registering Extensions:
+            - Making Zip archive of assets, and send with configuration and wait for extension uuid through [Backed Role CLI API]:
+                - Configuration Include: Unique handle, embeded blocks and it's file mainfest.
+                - Raw Validated Zip with it's hash to calculate for security.
+                - Posting and Waiting for Extension ID.
+
+        After getting extension, 
+        Inject Watcher to imediately update the content using uuid, token id, handle and session_id for particular file.
+        It will pust content to Backend Role-- CLI API for each update.
+
+        
+
+    # Deploy/Live:
+
+
+Backend Role -- [CLI API]:
+-----------------------------
+ On Serving: We use CLI token to retrive current session.
+    - We recieve zip with mainfest confugration.
+    - Validate confugiraion and mainfest for proper format.
+    - Extract zip after matching hash. 
+    and check each and every files that is linked into mainfest is correct or not, also folder/files Structure.
+
+    - Now, we have handle for extension [Unqiue for App], we search for app_extension table for if already exists.
+    - If already exists and in dev environment, replace the current structure with it.
+    - If not find, Insert the extension and return its id to update in environment handle.
+
+    - Embeded Block Scenero - Either to put in db or just in mainfest. otherwise just extension.[...]
+
+Watcher, On Update:
+    All things of above, and update the content accordingly. as of watcher.
+    With lots of validation which folder can contain which files.
+
+Get Assets from ZIP, watcher to push in bunnyCDN. and generate asset_url in rendering.
+while other things remain with App's Folder.
+
+Rendering Role: [Frontend User Site]: [Done]
+-------------------------------------
+    Get the type of extension:
+        Check for extension handle, next check for it's mainfest for block and render the file accordingly with [JW] to Inject
+        in defined target.
+
+        OR each blocks with file inside sql to render.
+
+
+Builder Role: [Show to Enable/Disabled Embed Block & Inject] - [Done]
+-----------------------------------------------------------
+ - Fetch all extension linked with app site install, and get it's mainfest.
+ - If block found in mainfest, show it with schema and on enabling it will insert into theme_settings.json.
+         OR
+- Check all blocks for the app in sql and shows accordingly, [Not implemented yet.]. 
+        [Dont know if inserting block in table is essential or it could be in json,.]
+
+Currently we-have app_extension table only with app linked.
+
+
+Make sure all process wont make issue between production/release. 
+also make sure, existing extension wont get hurt.
+
+
+Need to be done.
+---------------------------
+-- FileWatcher : Update [Save]
+    |
+-- CDN for Assets.
+
+-- VersionWise - Extension
+
+-- Floating Button App Live.
+
+---------------------------------------
+Deploy Role. Dev Live.
+---------------------------------------
+
