@@ -37,6 +37,7 @@
     "http-proxy": "^1.18.1",
     "inquirer": "^8.2.4",
     "jsonwebtoken": "^9.0.0",
+    "link": "^2.1.1",
     "mime-types": "^2.1.35",
     "minimatch": "^5.1.0",
     "node-fetch": "^3.3.0",

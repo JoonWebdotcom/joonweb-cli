@@ -128,8 +128,15 @@ async function detectExtensions(projectPath) {
 
 function updateEnv(key, value) {
     if (!fs.existsSync(envPath)) {
-        console.error(".env file not found!");
-        process.exit(1);
+        console.log(".env file not found!");
+        //process.exit(1);
+    }
+
+    // Create ENV File:
+     if (!fs.existsSync(envPath)) {
+      console.log("Creating .env file...");
+        fs.writeFileSync(envPath, "");
+        
     }
 
     let lines = fs.readFileSync(envPath, "utf8").split(/\r?\n/);
@@ -175,8 +182,6 @@ function detectPhpServePath(projectPath) {
   // Fallback
   return projectPath;
 }
-
-
 
 async function setupDevelopmentEnvironment(apiService, appConfig, selectedStore, app_url, template='node', extensions=[], watch=true) {
 // Now Install the App with API if Not Installed:
@@ -290,7 +295,7 @@ function startExtensionWatcher(extensions, apiService, appConfig, store, appUrl)
   console.log(chalk.cyan('\n🔧 Starting extension file watcher...'));
   
   const devSessionId = uuidv4();
-  
+  console.log(chalk.gray(`   🆔 Dev Session ID: ${devSessionId}`));
   extensions.forEach(extension => {
     console.log(chalk.gray(`   👁️  Watching: ${extension.name}`));
     
@@ -318,10 +323,13 @@ function startExtensionWatcher(extensions, apiService, appConfig, store, appUrl)
         const stats = fs.statSync(filePath);
 
         // Push update to API
-        await apiService.pushExtensionUpdate({
+        const updateStatus = await apiService.pushExtensionUpdate({
           site_id: store.id,
           app_jwt: appConfig.appId,
           extension_handle: extension.handle,
+          client_id: appConfig.client_id,
+          request_id: uuidv4(),
+          dev_session_id: devSessionId,
           update: {
             type: 'file_update',
             file: relativePath,
@@ -333,6 +341,8 @@ function startExtensionWatcher(extensions, apiService, appConfig, store, appUrl)
           },
           mode: 'development'
         });
+
+        console.log(updateStatus)
 
         console.log(chalk.green(`   ✅ Updated: ${relativePath}`));
       } catch (error) {
@@ -557,16 +567,16 @@ async function servePHPApp(projectPath, port, tunnel, shouldOpen, subdomain, app
   const servePath = detectPhpServePath(projectPath);
   return new Promise((resolve, reject) => {
       // Start PHP built-in server
-  const phpServer = spawn("php", [
-    "-S",
-    `localhost:${port}`,
-    "-t",
-    servePath
-  ], {
-    cwd: servePath,
-    stdio: "pipe",
-    shell: true
-  });
+      const phpServer = spawn("php", [
+        "-S",
+        `localhost:${port}`,
+        "-t",
+        servePath
+      ], {
+        cwd: servePath,
+        stdio: "pipe",
+        shell: true
+      });
 
     let serverReady = false;
 
